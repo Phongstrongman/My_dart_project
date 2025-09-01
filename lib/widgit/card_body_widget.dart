@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:thethao12/Modal/items.dart';
 
 class CardBody extends StatelessWidget {
-  const CardBody({super.key});
+  final DataItems item;
+
+  const CardBody({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +21,8 @@ class CardBody extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              ('Tập thể dục sáng  '),
+              item.name,
+
               style: TextStyle(
                 fontSize: 20,
                 color: Color.fromARGB(255, 0, 0, 0),
