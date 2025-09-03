@@ -26,6 +26,10 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  void _handledeletTask(String id) {
+    print('id');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +46,12 @@ class _MyAppState extends State<MyApp> {
       ),
 
       body: ListView(
-        children: items.map((item) => CardBody(item: item)).toList(),
+        children: items
+            .map(
+              (item) =>
+                  CardBody(item: item, handleDeleteTask: _handledeletTask),
+            )
+            .toList(),
       ), // xóa mảng lixt và bắt đầu tạo mảng để duyệt
       // mỗi lần retrun về item 1 cái thì ca gán nso vào giá trị card body
       floatingActionButton: FloatingActionButton(

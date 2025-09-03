@@ -3,9 +3,13 @@ import 'package:thethao12/Modal/items.dart';
 
 class CardBody extends StatelessWidget {
   final DataItems item;
+  const CardBody({
+    super.key,
+    required this.item,
+    required this.handleDeleteTask,
+  });
 
-  const CardBody({super.key, required this.item});
-
+  final Function handleDeleteTask;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,7 +34,15 @@ class CardBody extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Icon(Icons.delete_outlined, color: Color.fromARGB(255, 0, 0, 0)),
+            InkWell(
+              onTap: () {
+                handleDeleteTask(item.id);
+              },
+              child: Icon(
+                Icons.delete_outlined,
+                color: Color.fromARGB(255, 0, 0, 0),
+              ),
+            ),
           ],
         ),
       ),
