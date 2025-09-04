@@ -1,9 +1,6 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:thethao12/Modal/items.dart';
 import 'package:thethao12/widgit/card_modal_buttom.dart';
-
 import 'widgit/card_body_widget.dart';
 
 void main(List<String> args) {
@@ -11,7 +8,8 @@ void main(List<String> args) {
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({Key? key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -19,61 +17,63 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final List<DataItems> items = [];
 
-  void _handleAddTask(String name) {
-    final newItem = DataItems(id: DateTime.now().toString(), name: name);
+  // ✅ Hàm chung: thêm task thường hoặc quan trọng
+  void _handleAddTask(String name, Color color) {
+    final newItem = DataItems(
+      id: DateTime.now().toString(),
+      name: name,
+      color: color,
+    );
     setState(() {
       items.add(newItem);
     });
   }
 
-  void _handledeletTask(String id) {
-    print('id');
+  void _handleDeleteTask(String id) {
+    setState(() {
+      items.removeWhere((item) => item.id == id);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
+        title: const Center(
           child: Text('ToDoList', style: TextStyle(fontSize: 40)),
-        ), //tạo tên với kích thước màu
-        backgroundColor: const Color.fromARGB(
-          255,
-          7,
-          143,
-          255,
-        ), // tạo màu sắc cho ở trên appví
+        ),
+        backgroundColor: const Color.fromARGB(255, 7, 143, 255),
       ),
 
       body: ListView(
-        children: items
-            .map(
-              (item) =>
-                  CardBody(item: item, handleDeleteTask: _handledeletTask),
-            )
-            .toList(),
-      ), // xóa mảng lixt và bắt đầu tạo mảng để duyệt
-      // mỗi lần retrun về item 1 cái thì ca gán nso vào giá trị card body
+        children: [
+          const SizedBox(height: 8),
+          ...items.map(
+            (item) => Column(
+              children: [
+                CardBody(item: item, handleDeleteTask: _handleDeleteTask),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+        ],
+      ),
+
       floatingActionButton: FloatingActionButton(
-        //tạo nút icon (+)
         onPressed: () {
           showModalBottomSheet(
-            backgroundColor: Colors.grey,
-            shape: RoundedRectangleBorder(
+            backgroundColor: Colors.grey[200],
+            shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-            ), // set lại moder
-            // làm cho nó tròn lại
-            isScrollControlled:
-                true, // khởi tạo để bàn phím bấm  khi xoay không che task
-
+            ),
+            isScrollControlled: true,
             context: context,
-            builder: (BuildContext content) {
-              return ModalBottom(addTask: _handleAddTask);
+            builder: (BuildContext context) {
+              return ModalBottom(addTask: _handleAddTask); // ✅ chỉ cần 1 hàm
             },
           );
         },
-
-        child: const Icon(Icons.add, size: 20), // tạo icon nút nhấm
+        child: const Icon(Icons.add, size: 20),
       ),
     );
   }

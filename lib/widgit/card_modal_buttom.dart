@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 
-class ModalBottom extends StatelessWidget {
-  ModalBottom({super.key, required this.addTask});
+class ModalBottom extends StatefulWidget {
+  final Function(String, Color) addTask;
+  const ModalBottom({super.key, required this.addTask});
 
-  final Function addTask;
+  @override
+  State<ModalBottom> createState() => _ModalBottomState();
+}
+
+class _ModalBottomState extends State<ModalBottom> {
   final TextEditingController controller = TextEditingController();
+  bool isImportant = false; // mặc định là task thường
 
-  void _handleOnClick(BuildContext context) {
-    // hàm này  chức năng là đẩy dữ liệu người nhập vào
-
+  void _handleAdd(BuildContext context) {
     final name = controller.text.trim();
     if (name.isNotEmpty) {
-      addTask(name); // gọi hàm từ MyApp để thêm vào list
-      Navigator.pop(context); // đóng bottom sheet
+      final color = isImportant ? Colors.yellowAccent : Colors.white;
+      widget.addTask(name, color);
+      Navigator.pop(context); // đóng sau khi add
     }
   }
 
@@ -23,21 +28,45 @@ class ModalBottom extends StatelessWidget {
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
-              controller: controller, // ✅ fix ở đây
-              decoration: InputDecoration(
+              controller: controller,
+              decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 labelText: 'Mời bạn nhập vào',
               ),
             ),
             const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isImportant
+                          ? Colors.amber
+                          : Colors.grey[300],
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isImportant = !isImportant; // bật/tắt quan trọng
+                      });
+                    },
+                    child: Text(
+                      isImportant ? "No note ❌" : "Note ✅ ",
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
             SizedBox(
               height: 50,
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () => _handleOnClick(context),
-                child: const Text('Add task'),
+                onPressed: () => _handleAdd(context),
+                child: const Text("Add Task"),
               ),
             ),
           ],
